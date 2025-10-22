@@ -1,5 +1,5 @@
 // const BASE_URL = process.env.REACT_APP_BASE_URL
-const BASE_URL = "https://scholar-space-ubwg.onrender.com"
+const BASE_URL = "https://scholar-space-ubwg.onrender.com/api/v1"
 
 export const endpoints = {
   SENDOTP_API: BASE_URL + "/auth/sendotp",
