@@ -26,11 +26,13 @@ const ProfileDropDown = () => {
         aria-expanded={open}
       >
         <div className="flex items-center w-full justify-between">
-          <img
-            src={user?.image}
-            alt={`Profile-${user?.firstName}`}
-            className="aspect-square rounded-full w-7 object-cover"
-          />
+          <div className="relative w-7 h-7 rounded-full overflow-hidden">
+            <img
+              src={user?.image}
+              alt={`Profile-${user?.firstName}`}
+              className="w-full h-full object-cover"
+            />
+          </div>
           <AiOutlineCaretDown />
         </div>
       </button>

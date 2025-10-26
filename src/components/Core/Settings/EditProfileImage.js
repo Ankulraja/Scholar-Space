@@ -56,8 +56,8 @@ const EditProfileImage = () => {
 
   return (
     <div className='flex gap-5 bg-richblack-800 p-8 rounded-md border-[1px] border-richblack-600'>
-        <div >
-            <img className='aspect-square rounded-full w-20' 
+        <div className="relative w-20 h-20 rounded-full overflow-hidden">
+            <img className='w-full h-full object-cover' 
             src={previewSource||user?.image} alt={`Profile-${user?.firstName}`}/>
         </div>
 
