@@ -11,17 +11,27 @@ const accountApprovalTemplate = require('../templates/accountApprovalRes');
 
 exports.updateProfile=async(req,res)=>{
     try {
-        const{dateOfBirth="",about="",contactNumber="",gender=""}=req.body;
+        const{firstName="",lastName="",dateOfBirth="",about="",contactNumber="",gender=""}=req.body;
         const id=req.user.id;
 
         const userDetails=await User.findById(id);
         const updatedUser=await Profile.findById(userDetails.additionalDetails);
 
-        updatedUser.gender=gender;
-        updatedUser.dateOfBirth=dateOfBirth;
-        updatedUser.about=about;
-        updatedUser.contactNumber=contactNumber;
+        // Update Profile model fields
+        if(gender) updatedUser.gender=gender;
+        if(dateOfBirth) updatedUser.dateOfBirth=dateOfBirth;
+        if(about) updatedUser.about=about;
+        if(contactNumber) updatedUser.contactNumber=contactNumber;
         await updatedUser.save();
+
+        // Update User model fields (firstName and lastName)
+        const userUpdateData = {};
+        if(firstName) userUpdateData.firstName = firstName;
+        if(lastName) userUpdateData.lastName = lastName;
+        
+        if(Object.keys(userUpdateData).length > 0) {
+            await User.findByIdAndUpdate(id, userUpdateData, { new: true });
+        }
 
         const updatedUserDetails=await User.findById(id).populate("additionalDetails").exec();
         return res.status(200).json({

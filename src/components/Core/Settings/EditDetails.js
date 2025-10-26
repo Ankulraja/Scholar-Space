@@ -17,7 +17,6 @@ const EditDetails = () => {
   const {
     register,
     handleSubmit,
-    formState:{errors},
   }=useForm();
 
   const onSubmitHandler = async (data) => {
@@ -41,16 +40,9 @@ const EditDetails = () => {
               type='text'
               className='w-full rounded-md py-2 px-2 bg-richblack-700 style focus:outline-0 text-richblack-5'
               // placeholder='Enter first name'
-              {...register("firstName",{required:true})}
+              {...register("firstName")}
               defaultValue={user?.firstName}
               />
-                {
-                  errors.firstName &&(
-                    <span className='text-yellow-100'>
-                      Please enter your first name
-                    </span>
-                  )
-                }
              
           </div>
 
@@ -62,16 +54,9 @@ const EditDetails = () => {
               type='text'
               className='w-full rounded-md py-2 px-2 bg-richblack-700 style text-richblack-5 focus:outline-0'
               // placeholder='Enter last name'
-              {...register("lastName",{required:true})}
+              {...register("lastName")}
               defaultValue={user?.lastName}
               />
-               {
-                  errors.lastName &&(
-                    <span className='text-yellow-100'>
-                      Please enter your last name
-                    </span>
-                  )
-                }
           </div>
 
           <div className='flex flex-col gap-2'>
@@ -82,10 +67,6 @@ const EditDetails = () => {
               id='dateOfBirth'
               className='w-full rounded-md py-2 px-2 bg-richblack-700 text-richblack-5 style focus:outline-0'
               {...register("dateOfBirth",{
-                required:{
-                  value:true,
-                  message:"Please Enter your date of birth"
-                },
                 max:{
                   value:new Date().toISOString().toString().split("T")[0],
                   message:"Invalid date of birth"
@@ -94,13 +75,6 @@ const EditDetails = () => {
               defaultValue={user?.additionalDetails?.dateOfBirth}
             />
             
-            {
-                errors.dateOfBirth && (
-                  <span>
-                    {errors.dateOfBirth.message}
-                  </span>
-                )
-              }
           </div>
 
           <div className='flex flex-col gap-2'>
@@ -110,7 +84,7 @@ const EditDetails = () => {
                 name='gender'
                 id='gender'
                 className='w-full rounded-md py-2 px-2 bg-richblack-700 text-richblack-5 style focus:outline-0'
-                {...register("gender",{required:true})}
+                {...register("gender")}
                 defaultValue={user?.additionalDetails?.gender}
               >
               {
@@ -122,11 +96,6 @@ const EditDetails = () => {
               }
               </select>
 
-              {errors.gender && (
-                <span className="">
-                  Please enter your Date of Birth.
-                </span>
-              )}
           </div>
           
           <div className='flex flex-col gap-2'>
@@ -138,21 +107,11 @@ const EditDetails = () => {
               className='w-full rounded-md py-2 px-2 bg-richblack-700  text-richblack-5 style focus:outline-0'
               // placeholder='Enter last name'
               {...register("contactNumber", {
-                  required: {
-                    value: true,
-                  },
                   maxLength: { value: 12, message: "Invalid Contact Number" },
                   minLength: { value: 10, message: "Invalid Contact Number" },
                 })}
               defaultValue={user?.additionalDetails?.contactNumber}
               />
-              {
-                  errors.contactNumber &&(
-                    <span className='text-yellow-100'>
-                      Please enter your phone number
-                    </span>
-                  )
-                }
           </div>
 
           <div className='flex flex-col gap-2'>
@@ -163,18 +122,9 @@ const EditDetails = () => {
               type='text'
               className='w-full rounded-md py-2 px-2 bg-richblack-700 text-richblack-5 style focus:outline-0'
               // placeholder='Enter last name'
-              {...register("about",
-              {required:true             
-              })}
+              {...register("about")}
               defaultValue={user?.additionalDetails?.about}
               />
-               {
-                  errors.about &&(
-                    <span className='text-yellow-100'>
-                      Please write something about yourself
-                    </span>
-                  )
-                }
           </div>
         </div>
          
