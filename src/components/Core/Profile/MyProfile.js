@@ -17,7 +17,7 @@ const MyProfile = () => {
         <div className="flex items-center gap-3">
           <div>
             <img
-              className="aspect-square rounded-full w-14 sm:w-16"
+              className="aspect-square rounded-full w-14 sm:w-16 "
               src={user?.image}
               alt=""
             />
