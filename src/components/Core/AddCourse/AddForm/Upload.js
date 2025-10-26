@@ -63,11 +63,11 @@ const Upload = ({
   });
 
   function preview(file) {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setPreviewSource(reader.result);
-    };
+    // Use URL.createObjectURL for better video support
+    const objectURL = URL.createObjectURL(file);
+    setPreviewSource(objectURL);
+    console.log("File preview loaded:", file.name, file.type, file.size);
+    console.log("Object URL created:", objectURL);
   }
 
   useEffect(() => {
@@ -102,14 +102,29 @@ const Upload = ({
           <div className="flex items-center flex-col justify-center w-full min-h-[250px]">
             {video ? (
               isLocalFile ? (
-                <video
-                  src={previewSource}
-                  controls
-                  autoPlay
-                  className="max-w-full max-h-[300px] rounded-md"
-                >
-                  Your browser does not support the video tag.
-                </video>
+                <div className="relative">
+                  <video
+                    src={previewSource}
+                    controls
+                    preload="metadata"
+                    className="max-w-full max-h-[300px] rounded-md"
+                    style={{ width: "100%", height: "auto" }}
+                    onError={(e) => {
+                      console.error("Video error:", e);
+                      console.log(
+                        "Video src:",
+                        previewSource.substring(0, 100) + "..."
+                      );
+                    }}
+                    onLoadStart={() => console.log("Video load started")}
+                    onCanPlay={() => console.log("Video can play")}
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                  <div className="absolute top-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
+                    Video Preview - Click play to start
+                  </div>
+                </div>
               ) : (
                 <ReactPlayer
                   playing={true}

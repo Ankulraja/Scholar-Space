@@ -28,7 +28,7 @@ router.get('/showAllCourses',isAuthorized,isInstructor,showAllCourses);
 router.get('/getInstructorCourses',isAuthorized,isInstructor,getInstructorCourses);
     
 
-router.post("/createCategory", isAuthorized, isAdmin, createCategory)
+router.post("/createCategory", createCategory)
 router.get("/showAllCategories", getAllCategorys)
 router.post("/getCategoryPageDetails", categoryPageDetails)
 

@@ -50,7 +50,7 @@ export default function SideBar() {
 
         <button
           onClick={() => setOpen((prevState) => !prevState)}
-          className="flex pl-4 sm:pl-7 items-center gap-2 py-2 hover:bg-richblack-700 transition-colors duration-200 rounded-r-lg"
+          className="w-full flex pl-4 sm:pl-7 items-center gap-2 py-2 hover:bg-richblack-700 transition-colors duration-200 rounded-r-lg"
         >
           <VscSignOut className="text-base text-richblack-200" />
           <span className="text-richblack-200 text-sm sm:text-base">

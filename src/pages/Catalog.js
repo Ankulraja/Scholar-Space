@@ -21,7 +21,7 @@ const Catalog = () => {
     }
     const categoryID = res?.data?.allCategorys?.filter(
       (ct) => ct.title.split(" ").join("-").toLowerCase() === catalogName
-    )[0]._id;
+    )[0]?._id;
     setCategoryID(categoryID);
   }
   useEffect(() => {

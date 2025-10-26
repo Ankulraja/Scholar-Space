@@ -67,7 +67,7 @@ const NavBar = () => {
                         className="lg:w-[250px] absolute bg-richblack-5  opacity-0 invisible group-hover:opacity-100 
                                     group-hover:visible top-9 -right-[51px] rounded-md transition-all duration-200 z-50"
                       >
-                        <div className="w-6 h-6 rotate-45 absolute bg-richblack-5 -top-2 right-12  rounded-sm"></div>
+                        <div className="w-6 h-6 rotate-45 absolute -z-50 bg-richblack-5 -top-2 right-12  rounded-sm"></div>
 
                         <div className="text-richblack-800 flex flex-col py-2  ">
                           {subLinks?.length ? (
