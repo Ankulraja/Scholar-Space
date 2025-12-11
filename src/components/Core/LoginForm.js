@@ -28,7 +28,6 @@ function LoginForm() {
 
   const { email, password } = formData;
 
-  // Clear error when component mounts
   useEffect(() => {
     dispatch(clearError());
   }, [dispatch]);
@@ -58,7 +57,6 @@ function LoginForm() {
       [e.target.name]: e.target.value,
     }));
 
-    // Clear validation errors for the field being typed
     if (validationErrors[e.target.name]) {
       setValidationErrors((prev) => ({
         ...prev,
@@ -66,7 +64,6 @@ function LoginForm() {
       }));
     }
 
-    // Clear error when user starts typing
     if (error) {
       dispatch(clearError());
     }
@@ -84,7 +81,7 @@ function LoginForm() {
       onSubmit={handleOnSubmit}
       className="mt-6 flex w-full flex-col gap-y-4"
     >
-      {/* Error Message Display */}
+
       {error && (
         <div className="mb-4 p-3 rounded-md bg-red-900/20 border border-red-500/30">
           <div className="flex">

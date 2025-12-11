@@ -46,7 +46,7 @@ export const Home = () => {
             autoPlay
             playsInline
           >
-            <source src={Banner} type="video/mp4" />
+            <source src="https://res.cloudinary.com/dkoezhi9u/video/upload/v1765260253/4494957-hd_1920_1080_25fps_zdue7k.mp4" type="video/mp4" />
           </video>
         </div>
 
