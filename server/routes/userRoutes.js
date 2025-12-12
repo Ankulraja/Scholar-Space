@@ -9,7 +9,6 @@ const {
   sendOTP,
   changePassword,
 } = require("../controllers/authentication");
-const { refresh, logout } = require("../controllers/authentication");
 
 const {
   resetPasswordToken,
@@ -20,10 +19,7 @@ const { isAuthorized } = require("../middlewares/authorization");
 
 // Route for user login
 router.post("/login", login);
-// Refresh access token using refresh token cookie
-router.post("/refreshtoken", refresh);
-// Logout and clear refresh token
-router.post("/logout", logout);
+
 // Route for user signup
 router.post("/signup", signUP);
 // Route for sending OTP to the user's email

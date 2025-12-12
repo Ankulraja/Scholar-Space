@@ -8,15 +8,6 @@ const mailSender = require("../configurations/mailSender");
 require("dotenv").config();
 const { passwordUpdated } = require("../templates/passwordUpdate");
 
-function getCookieOptions() {
-  return {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-    maxAge: 15 * 24 * 60 * 60 * 1000,
-  };
-}
-
 exports.sendOTP = async (req, res) => {
   try {
     const { email } = req.body;
@@ -43,7 +34,7 @@ exports.sendOTP = async (req, res) => {
     }
 
     const otpPayload = { email, otp };
-    await OTP.create(otpPayload);
+    const otpBody = await OTP.create(otpPayload);
 
     return res.status(200).json({
       success: true,
@@ -57,7 +48,6 @@ exports.sendOTP = async (req, res) => {
     });
   }
 };
-
 exports.signUP = async (req, res) => {
   try {
     const {
@@ -178,106 +168,45 @@ exports.login = async (req, res) => {
         message: "User Not Found, please Enter Valid User Email",
       });
     }
+    console.log("dbishfb");
 
     const checkPass = await bcrypt.compare(password, user.password);
+    console.log(checkPass);
     if (!checkPass) {
       return res.status(400).json({
         success: false,
         message: "Password Not Match",
       });
     }
+    console.log("dbishfb");
 
     const payload = {
       email: user.email,
       id: user._id,
       accountType: user.accountType,
     };
-
-    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "15m",
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "2h",
     });
 
-    const refreshToken = jwt.sign(
-      { id: user._id },
-      process.env.REFRESH_SECRET,
-      {
-        expiresIn: "15d",
-      }
-    );
-
+    user.token = token;
     user.password = undefined;
 
-    const cookieOptions = getCookieOptions();
+    const options = {
+      expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      httpOnly: true,
+    };
 
-    res.cookie("refreshToken", refreshToken, cookieOptions).status(200).json({
+    res.cookie("token", token, options).status(200).json({
       success: true,
-      token: accessToken,
+      token,
       user,
       message: "Login Successfully",
     });
   } catch (e) {
-    return res.status(500).json({
-      success: false,
-      message: "Login failed",
-    });
+    return res.status(500).json({ success: false, message: "Login failed" });
   }
 };
-
-exports.refresh = async (req, res) => {
-  try {
-    const refreshToken = req.cookies?.refreshToken;
-    if (!refreshToken) {
-      return res
-        .status(401)
-        .json({ success: false, message: "No refresh token provided" });
-    }
-
-    let decoded;
-    try {
-      decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
-    } catch (err) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Invalid or expired refresh token" });
-    }
-
-    const user = await User.findById({ _id: decoded.id });
-    if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
-
-    const payload = {
-      email: user.email,
-      id: user._id,
-      accountType: user.accountType,
-    };
-
-    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "15m",
-    });
-
-    return res.status(200).json({ success: true, accessToken });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-exports.logout = async (req, res) => {
-  try {
-
-    const clearOptions = { ...getCookieOptions() };
-    delete clearOptions.maxAge;
-    res.clearCookie("refreshToken", clearOptions);
-    return res
-      .status(200)
-      .json({ success: true, message: "Logged out successfully" });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
-  }
-};
-
 exports.changePassword = async (req, res) => {
   try {
     const { oldPassword, newPassword, confirmNewPassword } = req.body;
@@ -311,7 +240,7 @@ exports.changePassword = async (req, res) => {
     );
 
     try {
-      await mailSender(
+      const emailResponse = await mailSender(
         updatedUser.email,
         "Password for your account has been updated",
         passwordUpdated(
