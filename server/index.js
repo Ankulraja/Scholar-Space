@@ -29,8 +29,23 @@ index.use(
 
 index.use(
   cors({
-    origin: "*",
-    methods: "*",
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        process.env.FRONTEND_URL,
+        process.env.FRONTEND_DEV_URL,
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+      ].filter(Boolean);
+
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("CORS policy: Origin not allowed"), false);
+    },
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })

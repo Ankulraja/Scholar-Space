@@ -1,6 +1,7 @@
 import { endpoints } from "../Api";
 import { toast } from "react-hot-toast";
 import ApiConnector from "../ApiConnector";
+import authManager from "../authManager";
 import {
   setLoading,
   setToken,
@@ -107,7 +108,7 @@ export function signUp(
 export function login(email, password, navigate) {
   return async (dispatch) => {
     dispatch(setLoading(true));
-    dispatch(clearError()); // Clear any previous errors
+    dispatch(clearError());
     try {
       const response = await ApiConnector("POST", LOGIN_API, {
         email,
@@ -120,6 +121,7 @@ export function login(email, password, navigate) {
 
       toast.success("Login successfully");
       dispatch(setToken(response.data.token));
+      authManager.setToken(response.data.token);
 
       const userImage = response.data?.user?.image
         ? response.data.user.image
@@ -133,8 +135,6 @@ export function login(email, password, navigate) {
     } catch (error) {
       console.error("Login error:", error);
       let errorMessage = "Could not login";
-
-      // Handle specific error cases
       if (error.response?.status === 401) {
         errorMessage = "Invalid email or password";
       } else if (error.response?.status === 404) {
@@ -146,7 +146,6 @@ export function login(email, password, navigate) {
       } else if (error.message) {
         errorMessage = error.message;
       }
-
       dispatch(setError(errorMessage));
       toast.error(errorMessage);
     }
@@ -202,9 +201,21 @@ export function resetPassword(password, confirmPassword, token) {
 export function logout(navigate) {
   return async (dispatch) => {
     dispatch(setLoading(true));
+    try {
+      await ApiConnector(
+        "POST",
+        (process.env.REACT_APP_BASE_URL || "") + "/auth/logout",
+        null,
+        null
+      );
+    } catch (e) {
+      console.log("Error occoured in logout")
+    }
+
     dispatch(setToken(null));
     dispatch(setUser(null));
     dispatch(resetCart());
+    authManager.clearToken();
 
     localStorage.removeItem("token");
     localStorage.removeItem("user");
