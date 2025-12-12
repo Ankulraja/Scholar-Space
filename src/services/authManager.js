@@ -83,7 +83,7 @@ function addPendingRequest(cb) {
 }
 
 function setToken(token) {
-  console.log("cmg to set token .............")
+
   accessToken = token;
   if (token) scheduleRefresh();
   else clearToken();
